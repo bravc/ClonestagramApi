@@ -37,19 +37,25 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        $post = new Post;
-        $post->description = $request->input('description');
+        $response = null;
 
+        // get image from upload and attemp to upload
         $file = $request->file('image')->getRealPath();
+        $result = \Cloudinary\Uploader::upload($file, []);
 
-        \Cloudinary\Uploader::upload($file, []);
+        // check if url was generated
+        if (isset($result['secure_url'])) {
+            $post = new Post;
+            $post->description = $request->input('description');
+            $post->image_url = $result['secure_url'];
+            $post->save();
+            $response = new Response($result['secure_url'], 202);
+        } else {
+            $response = new Response('Failed to create', 400);
+        }
 
-        $post->image_url = $request->input('image_url');
-        $post->save();
-
-
-
-        return new Response('Post Uploaded!', 200);
+    
+        return $response;
     }
 
     /**
@@ -95,5 +101,9 @@ class PostsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getAll() {
+        return response()->json(Post::all());
     }
 }

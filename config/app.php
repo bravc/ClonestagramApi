@@ -14,7 +14,10 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
-
+    
+    /**
+     * Cloudinary configs
+     */
     'cloud_name' => env('CLOUD_NAME', 'asdf'),
     'api_key' => env('API_KEY', 2134),
     'api_secret' => env('API_SECRET', 'rweqf43'),
