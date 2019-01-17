@@ -39,20 +39,26 @@ class PostsController extends Controller
     {
         $response = null;
 
-        // get image from upload and attemp to upload
-        $file = $request->file('image')->getRealPath();
-        $result = \Cloudinary\Uploader::upload($file, []);
+        if ($request->hasFile('image')) {
+            // get image from upload and attemp to upload
+            $file = $request->file('image')->getRealPath();
+            \Log::info($file);
+            $result = \Cloudinary\Uploader::upload($file, []);
 
-        // check if url was generated
-        if (isset($result['secure_url'])) {
-            $post = new Post;
-            $post->description = $request->input('description');
-            $post->image_url = $result['secure_url'];
-            $post->save();
-            $response = new Response($result['secure_url'], 202);
+            // check if url was generated
+            if (isset($result['secure_url'])) {
+                $post = new Post;
+                $post->description = $request->input('description');
+                $post->image_url = $result['secure_url'];
+                $post->save();
+                $response = new Response($result['secure_url'], 201);
+            } else {
+                $response = new Response('Failed to create', 400);
+            }
         } else {
-            $response = new Response('Failed to create', 400);
+            $response = new Response('No image', 400);
         }
+        
 
     
         return $response;
