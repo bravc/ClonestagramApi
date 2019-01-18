@@ -20,7 +20,7 @@ Route::get('/', function () {
     "cloud_name" => config('app.cloud_name'),
     "api_key" => config('app.api_key'),
     "api_secret" => config('app.api_secret')
-  ));
+));
 
 Auth::routes();
 
