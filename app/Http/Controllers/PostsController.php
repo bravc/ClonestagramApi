@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Post as PostResource;
+use App\Http\Resources\PostCollection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
@@ -14,19 +16,13 @@ class PostsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-    }
+        if ($request->user()->posts() !== null) {
+            return new PostCollection($request->user()->posts());
+        }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return response()->json([], 200);
     }
 
     /**
@@ -72,19 +68,8 @@ class PostsController extends Controller
      */
     public function show($id)
     {
-        $post = Post::findOrFail($id);
+        $post = new PostResource(Post::findOrFail($id));
         return $post;
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
@@ -114,12 +99,5 @@ class PostsController extends Controller
         $post->delete();
 
         return response()->json('Resource destroyed', 204);
-    }
-
-    /**
-     * Get all posts
-     */
-    public function getAll() {
-        return response()->json(Post::orderByDesc('created_at')->get());
     }
 }

@@ -13,21 +13,25 @@ use Illuminate\Http\Request;
 |
 */
 
+// get currenr user
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// get all users
+Route::middleware('auth:api')->get('/users', function (Request $request) {
+    return App\User::all();
+});
+
 
 Route::group(['middleware' => ['auth:api']], function() {
-    Route::get('posts/all', 'PostsController@getAll');
+    Route::patch('like', 'PostsController@addLike');
     Route::resource('posts', 'PostsController');
 });
 
-Route::group([
-    'prefix' => 'auth'
-], function () {
+Route::group(['prefix' => 'auth'], function () {
     Route::post('login', 'AuthController@login');
-    Route::post('signup', 'AuthController@signup');
+    Route::post('register', 'AuthController@register');
   
     Route::group([
       'middleware' => 'auth:api'
