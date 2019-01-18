@@ -37,10 +37,13 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        $response = null;
+        $request->validate([
+            'image' => 'required|image',
+            'description' => 'required|string',
+        ]);
 
         if ($request->hasFile('image')) {
-            // get image from upload and attemp to upload
+            // get image from upload and attempt to upload
             $file = $request->file('image')->getRealPath();
             \Log::info($file);
             $result = \Cloudinary\Uploader::upload($file, []);
@@ -51,17 +54,14 @@ class PostsController extends Controller
                 $post->description = $request->input('description');
                 $post->image_url = $result['secure_url'];
                 $post->save();
-                $response = new Response($result['secure_url'], 201);
+                return response()->json(['url' => $result['secure_url']], 201);
             } else {
-                $response = new Response('Failed to create', 400);
+                return response()->json(['error' => 'Failed to create image URL'], 400);
             }
         } else {
-            $response = new Response('No image', 400);
+            return response()->json(['error' => 'No image provided'], 400);
         }
-        
 
-    
-        return $response;
     }
 
     /**
@@ -72,7 +72,8 @@ class PostsController extends Controller
      */
     public function show($id)
     {
-        //
+        $post = Post::findOrFail($id);
+        return $post;
     }
 
     /**
@@ -95,7 +96,10 @@ class PostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $article = Post::findOrFail($id);
+        $article->update($request->all());
+
+        return $article;
     }
 
     /**
@@ -106,10 +110,16 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = Post::findOrFail($id);
+        $post->delete();
+
+        return response()->json('Resource destroyed', 204);
     }
 
+    /**
+     * Get all posts
+     */
     public function getAll() {
-        return response()->json(Post::all());
+        return response()->json(Post::orderByDesc('created_at')->get());
     }
 }

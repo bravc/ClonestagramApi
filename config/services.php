@@ -39,5 +39,10 @@ return [
             'tolerance' => env('STRIPE_WEBHOOK_TOLERANCE', 300),
         ],
     ],
+    'passport' => [
+        'client_secret' => env('CLIENT_SECRET'),
+        'client_id' => env('CLIENT_ID'),
+        'login_endpoint' => env('LOGIN_ENDPOINT')
+    ]
 
 ];

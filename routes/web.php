@@ -15,9 +15,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('posts/all', 'PostsController@getAll');
-Route::resource('posts', 'PostsController');
-
 // set up cloudinary
 \Cloudinary::config(array( 
     "cloud_name" => config('app.cloud_name'),
