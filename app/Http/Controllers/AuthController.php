@@ -52,7 +52,7 @@ class AuthController extends Controller {
         ]);
 
 
-        $tokenRequest = Request::create(config('services.passport.login_endpoint'),
+        $tokenRequest = Request::create(env('APP_URL').'/oauth/token',
             'POST'
         );
         $response = Route::dispatch($tokenRequest);
