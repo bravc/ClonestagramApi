@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-// get currenr user
+// get current user
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -24,11 +24,26 @@ Route::middleware('auth:api')->get('/users', function (Request $request) {
 });
 
 
+/**
+ * Posts and their routes
+ */
 Route::group(['middleware' => ['auth:api']], function() {
-    Route::patch('like', 'PostsController@addLike');
+    Route::patch('posts/{post}/likes', 'PostsController@addLike');
+    Route::patch('posts/{post}/dislikes', 'PostsController@removeLike');
     Route::resource('posts', 'PostsController');
+
+    Route::group(['prefix' => 'users'], function() {
+        Route::patch('follow/{user}', 'UsersController@follow');
+        Route::get('followers/{user}', 'UsersController@followers');
+        Route::get('following/{user}', 'UsersController@following');
+        Route::get('{user}/posts', 'UsersController@posts');
+        Route::patch('unfollow/{user}', 'UsersController@unfollow');
+    });
 });
 
+/**
+ * User functions
+ */
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', 'AuthController@login');
     Route::post('register', 'AuthController@register');

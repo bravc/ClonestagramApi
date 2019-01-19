@@ -21,7 +21,7 @@ class Post extends JsonResource
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at,
             "likes" => $this->likes,
-            "author" => $this->author
+            "author" => $this->user
         ];
     }
 }

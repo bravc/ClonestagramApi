@@ -18,7 +18,7 @@ class PostsController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->user()->posts() !== null) {
+        if ($request->user()->posts()->exists()) {
             return new PostCollection($request->user()->posts());
         }
 
@@ -99,5 +99,31 @@ class PostsController extends Controller
         $post->delete();
 
         return response()->json('Resource destroyed', 204);
+    }
+
+    /**
+     * Add like to post
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function addLike($id) {
+        $post = Post::findOrFail($id);
+
+        $post->likes = $post->likes + 1;
+        $post->save();
+    }
+
+    /**
+     * Remove like from post
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function removeLike($id) {
+        $post = Post::findOrFail($id);
+
+        $post->likes = $post->likes - 1;
+        $post->save();
     }
 }
