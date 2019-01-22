@@ -28,13 +28,21 @@ Route::middleware('auth:api')->get('/users', function (Request $request) {
  * Posts and their routes
  */
 Route::group(['middleware' => ['auth:api']], function() {
+    // posts
     Route::patch('posts/{post}/likes', 'PostsController@addLike');
     Route::patch('posts/{post}/dislikes', 'PostsController@removeLike');
+    Route::get('posts/{post}/comments', 'PostsController@comments');
     Route::resource('posts', 'PostsController');
 
+    // comments
+    Route::resource('comments', 'CommentsController');
+
+    // users
     Route::group(['prefix' => 'users'], function() {
         Route::patch('follow/{user}', 'UsersController@follow');
         Route::get('followers/{user}', 'UsersController@followers');
+        Route::get('{user}', 'UsersController@get');
+        Route::get('following/posts', 'UsersController@followingPosts');
         Route::get('following/{user}', 'UsersController@following');
         Route::get('{user}/posts', 'UsersController@posts');
         Route::patch('unfollow/{user}', 'UsersController@unfollow');

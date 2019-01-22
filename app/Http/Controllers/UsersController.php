@@ -4,9 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\PostCollection;
+use App\Http\Resources\User as UserResource;
 
 class UsersController extends Controller
 {
+
+    /**
+     * Get info on another user
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    function get($user_id) {
+        $user = \App\User::findOrFail($user_id);
+
+        return new UserResource($user);
+    }
+
     /**
      * Follow another user
      * 
@@ -44,6 +57,22 @@ class UsersController extends Controller
         $user = \App\User::findOrFail($user_id);
 
         return $user->following;
+    }
+
+    /**
+     * Show posts of followers
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    function followingPosts(Request $request) {
+        $user = $request->user();
+        $posts = [];
+
+        // return $user->following->first()->posts->toArray();
+        foreach ($user->following as $user) {
+            array_push($posts, ...new PostCollection($user->posts));
+        }
+        return $posts;
     }
 
     /**

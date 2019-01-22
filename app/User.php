@@ -32,8 +32,15 @@ class User extends Authenticatable
     /**
      * Users post
      */
-    public function posts(){
+    public function posts() {
         return $this->hasMany('App\Post');
+    }
+
+    /**
+     * Define relationship with a comments
+     */
+    public function comments() {
+        return $this->hasMany('App\Comment');
     }
 
     /**
@@ -44,6 +51,9 @@ class User extends Authenticatable
         return $this->belongsToMany('App\User', 'user_followers', 'user_id', 'follower_id');
     }
 
+    /**
+     * Define relationship with another user
+     */
     public function following()
     {
         return $this->belongsToMany('App\User', 'user_followers', 'follower_id', 'user_id');

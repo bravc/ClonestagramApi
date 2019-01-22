@@ -81,10 +81,10 @@ class PostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $article = Post::findOrFail($id);
-        $article->update($request->all());
+        $post = Post::findOrFail($id);
+        $post->update($request->all());
 
-        return $article;
+        return $post;
     }
 
     /**
@@ -125,5 +125,17 @@ class PostsController extends Controller
 
         $post->likes = $post->likes - 1;
         $post->save();
+    }
+
+    /**
+     * Get comments of post
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function comments($id) {
+        $post = Post::findOrFail($id);
+
+        return $post->comments;
     }
 }
