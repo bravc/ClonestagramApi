@@ -56,7 +56,7 @@ class UsersController extends Controller
     function following($user_id) {
         $user = \App\User::findOrFail($user_id);
 
-        return array_merge($user->following->toArray(), [$user]);
+        return $user->following;
     }
 
     /**
@@ -68,10 +68,12 @@ class UsersController extends Controller
         $user = $request->user();
         $posts = [];
 
-        // return $user->following->first()->posts->toArray();
         foreach ($user->following as $user) {
             array_push($posts, ...new PostCollection($user->posts));
         }
+
+        // add user's own posts
+        array_push($posts, ...new PostCollection($request->user()->posts));
         return $posts;
     }
 
