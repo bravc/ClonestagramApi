@@ -19,7 +19,7 @@ class PostsController extends Controller
     public function index(Request $request)
     {
         if ($request->user()->posts()->exists()) {
-            return new PostCollection($request->user()->posts());
+            return new PostCollection($request->user()->posts);
         }
 
         return response()->json([], 200);
