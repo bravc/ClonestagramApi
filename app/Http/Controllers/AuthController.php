@@ -57,6 +57,10 @@ class AuthController extends Controller {
         );
         $response = Route::dispatch($tokenRequest);
 
+        if ($response->status() === 200) {
+            $user= User::where('email', $request->email)->first();
+            $response->setContent(array_merge(['user' => $user], \json_decode($response->content(), true)));
+        }
 
         return $response;
     }

@@ -56,7 +56,7 @@ class UsersController extends Controller
     function following($user_id) {
         $user = \App\User::findOrFail($user_id);
 
-        return $user->following;
+        return array_merge($user->following->toArray(), [$user]);
     }
 
     /**

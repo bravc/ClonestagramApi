@@ -49,7 +49,7 @@ class PostsController extends Controller
                 $post = new Post;
                 $post->description = $request->input('description');
                 $post->image_url = $result['secure_url'];
-                $post->save();
+                $request->user()->posts()->save($post);
                 return response()->json(['url' => $result['secure_url']], 201);
             } else {
                 return response()->json(['error' => 'Failed to create image URL'], 400);
