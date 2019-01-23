@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\CommentCollection;
 
 class Post extends JsonResource
 {
@@ -18,11 +19,10 @@ class Post extends JsonResource
             "id" => $this->id,
             "description" => $this->description,
             "image_url" => $this->image_url,
-            "created_at" => $this->created_at,
-            "updated_at" => $this->updated_at,
+            "created_at" => $this->created_at->toArray()['formatted'],
             "likes" => $this->likes,
-            "author" => $this->user,
-            "comments" => $this->comments
+            "user" => $this->user,
+            "comments" => new CommentCollection($this->comments)
         ];
     }
 }

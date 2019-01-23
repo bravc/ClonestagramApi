@@ -20,6 +20,15 @@ class Comment extends Model
     ];
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'updated_at', 
+    ];
+
+    /**
      * Define relationship with a user
      */
     public function user() {
